@@ -7,11 +7,8 @@ public class Worker1 {
 
     public static void main(String[] args) throws IOException {
         
-        final String ip = "127.0.0.1";
-        final int port = 8000;
+        Connection connectionToServer = new Connection();
         
-        try (
-            Socket connection = new Socket( ip, port);
-        ) {}
+
     } 
 }
