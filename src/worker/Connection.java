@@ -8,7 +8,7 @@ import java.net.Socket;
 public class Connection {
 
     private final String ip = "127.0.0.1"; // ip of master
-    private final int port = 8000;         // port number of master
+    private final int port = 8080;         // port number of master
     private static Socket connectionToServer = null; 
     private static String ServerIP;
     private static int ServerPort;
