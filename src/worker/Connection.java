@@ -1,10 +1,7 @@
 package worker;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -20,7 +17,7 @@ public class Connection {
     private PrintWriter out;
 
     
-    Connection() throws IOException {
+    Connection() {
         
         try {
             connectionToServer = new Socket( serverIP, serverPort);
@@ -37,30 +34,33 @@ public class Connection {
         } catch ( Exception streams) {
             
         }
+        
         /* Print Info */
         System.out.println("Connection Established!");
         System.out.println(">>  IP: " + serverIP );
         System.out.println(">>Port: " + serverPort );
+        System.out.println("");
         
         status = "ok";
     }
     
-    public String getMessage() {
-        
-        String userInput = "Intialized String!";
-        
-        // Get message
+    public void getMessage() {
+ 
         try {
+            System.out.println(">> " + in.readLine());       
+        } catch ( Exception m ) { 
+            System.err.println("Message cannot be read!"); 
+        }
 
-            while ((userInput = stdIn.readLine()) != null) {
-                out.println(userInput);
-                System.out.println(">> " + in.readLine());
-            }
-            
-        } catch ( Exception m ) { System.err.println("Message cannot be read!"); }
-        
-        // Return message
-        return userInput;
+    }
+    
+    public void sendMessage() {
+           
+//        try {
+//            System.out.println(">> " + in.readLine());       
+//        } catch ( Exception m ) { 
+//            System.err.println("Message cannot be sent!"); 
+//        }        
     }
     
     public void close() {
