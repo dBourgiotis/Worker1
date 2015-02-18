@@ -10,7 +10,9 @@ public class Worker1 {
         Connection connectionToServer = new Connection();
         
         if ( connectionToServer.getStatus().equals("ok") ) {
+            
             System.out.println( connectionToServer.getMessage() );
+            
             while ( true ) {
                 // wait for request
                 if ( true /* special command from master */ ){
