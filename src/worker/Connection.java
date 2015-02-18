@@ -1,57 +1,66 @@
 package worker;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 public class Connection {
 
-    private final String ip = "127.0.0.1"; // ip of master
-    private final int port = 8000;         // port number of master
+    private final String serverIP = "127.0.0.1"; // ip of master
+    private final int serverPort = 8000;         // port number of master
     private static Socket connectionToServer = null; 
-    private static String ServerIP;
-    private static int ServerPort;
+
     private String status = "Incomplete";
-    private ObjectInputStream out;
-    private ObjectOutputStream output;
+    private BufferedReader in;
+    private BufferedReader stdIn;
+    private PrintWriter out;
+
     
     Connection() throws IOException {
         
-        connectionToServer = new Socket( ip, port);
-        
-        try { /* Get Server's Info */
-            ServerIP = connectionToServer.getInetAddress().getHostName() ;
-            ServerPort = connectionToServer.getPort();
-        } catch ( Exception si) {
-            System.err.println("Couldn't get server's info!");
+        try {
+            connectionToServer = new Socket( serverIP, serverPort);
+        } catch ( Exception c ) {
+            System.err.println("Couldn't connect to server!");
         }
         
         try { /* Redirect streams */
-            out = new ObjectInputStream( connectionToServer.getInputStream() );
-            output = new ObjectOutputStream( connectionToServer.getOutputStream());
+            in = new BufferedReader( /* Get Input from server*/
+                    new InputStreamReader( connectionToServer.getInputStream()));
+            stdIn = new BufferedReader( /* Redirect server's input to your default System.in */
+                    new InputStreamReader(System.in));
+            out = new PrintWriter( connectionToServer.getOutputStream(), true);
         } catch ( Exception streams) {
             
         }
         /* Print Info */
         System.out.println("Connection Established!");
-        System.out.println(">>  IP: " + ServerIP );
-        System.out.println(">>Port: " + ServerPort );
+        System.out.println(">>  IP: " + serverIP );
+        System.out.println(">>Port: " + serverPort );
         
         status = "ok";
     }
     
     public String getMessage() {
         
-        String message="lol";
+        String userInput = "Intialized String!";
+        
         // Get message
         try {
-            message = (String) out.readObject();
-        } catch ( Exception m ) {
-            System.err.println("Message cannot be read!");
-        }
+
+            while ((userInput = stdIn.readLine()) != null) {
+                out.println(userInput);
+                System.out.println(">> " + in.readLine());
+            }
+            
+        } catch ( Exception m ) { System.err.println("Message cannot be read!"); }
+        
         // Return message
-        return message;
+        return userInput;
     }
     
     public void close() {
